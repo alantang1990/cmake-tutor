@@ -3,3 +3,25 @@
 !.*yml
 
 build/
+
+# Executable files
+*.exe
+*.out
+*Test
+
+# Compiled Object files
+*.obj
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so
+*.dll
+*.dylib
+
+# Compiled Static libraries
+*.lib
+*.lai
+*.la
+*.a
