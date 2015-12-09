@@ -4,7 +4,7 @@ os:
   - linux
   - osx
 
-complier:
+compiler:
   - gcc
   - clang
 
@@ -14,22 +14,18 @@ env:
     - CONF=release ARCH=x86_64
     - CONF=debug   ARCH=x86
     - CONF=release ARCH=x86
-    allow_failures:
-      - os: osx
 
 before_install:
   - echo $LANG
   - echo $TRAVIS_OS_NAME
-  - if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get update && sudo apt-get install -qq cmake llvm-3.4 clang-3.4 libc++1; fi
-  - if [ $TRAVIS_OS_NAME == osx ]; then brew update && brew install cmake; fi
-  - clang -v
-  - uname -a
+  - if [ "$TRAVIS_OS_NAME" == "linux" && "$ARCH" = "x86" ]; then sudo apt-get install -qq g++-multilib libc6-dbg:i386; fi
 
 install: true
 
 before_script:
   - mkdir build
-  - cd build && cmake -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_BUILD_TYPE=$CONF ..
+  - eval "ARCH=${ARCH}";
+     (cd build && cmake -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_BUILD_TYPE=$CONF ..)
 
 script:
   - cd build
