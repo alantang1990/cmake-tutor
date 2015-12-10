@@ -18,21 +18,29 @@ env:
 before_install:
   - echo $LANG
   - echo $TRAVIS_OS_NAME
-  - if [ "$TRAVIS_OS_NAME" == "linux" && "$ARCH" = "x86" ]; then sudo apt-get install -qq g++-multilib libc6-dbg:i386; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" -a "$ARCH" == "x86" ]; then
+        sudo apt-get update;
+        sudo apt-get install -qq g++-multilib libc6-dbg:i386;
+    fi
 
 install: true
 
 before_script:
   - mkdir build
-  - eval "ARCH=${ARCH}";
-     (cd build && cmake -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_BUILD_TYPE=$CONF ..)
+  - echo ${ARCH}
+  - if [ "${ARCH}" == "x86" ]; then ARCH_FLAGS=-m32; else ARCH_FLAGS=-m64; fi
+  - (cd build &&
+     cmake -DCMAKE_VERBOSE_MAKEFILE=ON
+     -DCMAKE_BUILD_TYPE=$CONF
+     -DCMAKE_CXX_FLAGS="$ARCH_FLAGS"
+     ..)
 
 script:
   - cd build
   - make
 
 after_success:
-  - echo build success
+  - ./Tutorial 5
 
 after_failure:
   - echo build failure
